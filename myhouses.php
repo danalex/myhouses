@@ -1,3 +1,77 @@
+//Maintains the file containing the entries.
+class Entries
+{
+    private $path;
+    private $entries;
+    private $modified;
+
+    public function __construct($path)
+    {
+        $this->path = $path;
+        $this->entries = new SplQueue();
+        $this->modified = false;
+    }
+
+    public function open()
+    {
+        $file_info = new SplFileInfo($this->path); //Gets an SplFileObject object for the file
+        $opened = false;
+        if ($file_info->isReadable()) {
+            $file = $file_info->openFile("r") or die("Could not open file.");
+
+            $file->setFlags(SplFileObject::READ_CSV); //Set the READ_CSV flag so the file can parse the CSV entries automatically.
+            foreach ($file as $row) {
+                $this->add_entry($row);
+            }
+            $opened = true;
+        }
+        $this->modified = false;
+        return $opened;
+    }
+
+    public function count()
+    {
+        return count($this->entries);
+    }
+
+    public function add_entry($args)
+    {
+        if (count($args) != 4) {
+            return false;
+        }
+        $entry = array(
+            "sale/rent" => trim($args[0]),
+            "price_gbp" => trim($args[1]),
+            "address" => trim($args[2]),
+            "bedrooms" => trim($args[3])
+        );
+        $this->entries->enqueue($entry);
+        $this->modified = true;
+        return true;
+    }
+
+    public function search($field, $value)
+    {
+        return new EntryFilter($this->entries, $field, $value);
+    }
+
+    public function is_modified()
+    {
+        return $this->modified;
+    }
+
+    public function save()
+    {
+        if (!$this->modified) {
+            return;
+        }
+        $file = new SplFileObject($this->path, "w");
+        foreach ($this->entries as $entry) {
+            $file->fputcsv([$entry["sale/rent"], $entry["price_gbp"], $entry["address"], $entry["bedrooms"]]);
+        }
+    }
+}
+
 $entries = new Entries("file.csv");
 
 if ($entries->open()) {
