@@ -151,3 +151,15 @@ while (!feof($stdin)) {
         break;
     }
 }
+
+if ($entries->is_modified()) {
+    echo "File has been modified. Do you want to save? [Y/n]";
+    $command = strtolower(trim(fgets($stdin)));
+    if ($command != "n") {
+        $entries->save();
+        echo "File saved.\n";
+    }
+}
+
+echo "Thank you. Have a nice day! \n";
+?>
