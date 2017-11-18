@@ -1,2 +1,2 @@
 # myhouses
-![Alt text](/relative/path/to/readme.jpg?raw=true)
+![Alt text](readme.jpg?raw=true)
