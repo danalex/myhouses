@@ -1,3 +1,27 @@
+// Iterator that filters entries by a specific field-value pair.
+class EntryFilter extends FilterIterator
+{
+    private $field;
+    private $value_;
+
+    public function __construct(Iterator $iterator, $field, $value)
+    {
+        parent::__construct($iterator);
+        $this->field = $field;
+        $this->value_ = $value;
+    }
+
+    //Overrides the FilterIterator's method. Checks to see if the current element matches the search query
+    public function accept()
+    {
+        $entry = $this->current();
+        if (strcasecmp($entry[$this->field], $this->value_) == 0) {
+            return true;
+        }
+        return false;
+    }
+}
+
 //Maintains the file containing the entries.
 class Entries
 {
