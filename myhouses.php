@@ -1,3 +1,12 @@
+<?php 
+echo "Commands:\n";
+echo "  ADD <sale/rent> <price_gbp> <address> <bedrooms>\n";
+echo "    Add an item to the entries. Use underscore for spaces in the address field \n";
+echo "  SEARCH <by_what> <what>\n";
+echo "    Search the items for an entry that mathces the query.\n";
+echo "  EXIT\n";
+echo "    Exit the CLI.\n";
+
 // Iterator that filters entries by a specific field-value pair.
 class EntryFilter extends FilterIterator
 {
